@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>La Evolución del Discurso | Blog Académico Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN SYSTEM
+═══════════════════════════════════════════════════════════ */
+:root {
+  --void:    #080709;
+  --deep:    #0f0d10;
+  --surface: #161318;
+  --lift:    #1e1a21;
+  --border:  rgba(255,255,255,.07);
+  --border2: rgba(255,255,255,.12);
+  --text:    #e8e2d9;
+  --muted:   #8a8278;
+  --dim:     rgba(232,226,217,.45);
+
+  --ember:   #e05c2e;
+  --ember2:  #f5814f;
+  --gold:    #c9a84c;
+  --gold2:   #e8c96f;
+  --teal:    #3aa8a0;
+  --rose:    #c45a7a;
+
+  --font-d: 'Cormorant Garamond', Georgia, serif;
+  --font-b: 'Outfit', system-ui, sans-serif;
+
+  --nav-h: 70px;
+  --r: 14px;
+  --r-sm: 8px;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-b);
+  background: var(--void);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Custom cursor ─────────────────────────────────────── */
+#cursor {
+  position: fixed; z-index: 99999;
+  width: 10px; height: 10px;
+  background: var(--ember);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width .15s, height .15s, background .2s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed; z-index: 99998;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(224,92,46,.5);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: transform .08s, width .2s, height .2s, opacity .2s;
+}
+body:has(a:hover) #cursor,
+body:has(button:hover) #cursor { width: 18px; height: 18px; background: var(--gold); }
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring { width: 56px; height: 56px; border-color: rgba(201,168,76,.5); }
+
+/* ── Reading progress bar ──────────────────────────────── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 2000;
+  height: 3px; width: 0;
+  background: linear-gradient(90deg, var(--ember), var(--gold));
+  transition: width .1s linear;
+  box-shadow: 0 0 10px var(--ember);
+}
+
+/* ── Noise texture overlay ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  opacity: .025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%;
+  transition: background .4s, border-color .4s;
+  border-bottom: 1px solid transparent;
+}
+nav.stuck {
+  background: rgba(8,7,9,.85);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border-color: var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-d);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  display: flex; align-items: center; gap: .6rem;
+}
+.nav-logo .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ember);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:.7} }
+
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-size: .78rem; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  transition: color .2s; position: relative; padding-bottom: 3px;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1px; background: var(--ember);
+  transition: width .3s ease;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a:not(:hover)::after { left: auto; right: 0; }
+
+.nav-cta {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .78rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ember);
+  border: 1px solid rgba(224,92,46,.3);
+  padding: .5rem 1.1rem; border-radius: 100px;
+  transition: all .25s; cursor: none;
+}
+.nav-cta:hover { background: var(--ember); color: white; border-color: var(--ember); }
+
+.burger { display: none; flex-direction: column; gap: 5px; cursor: none; }
+.burger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+
+/* ─────────────────────────────────────────────────────────
+   HERO — FULL CINEMATIC
+───────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  position: relative; overflow: hidden;
+  padding: var(--nav-h) 6% 0;
+}
+
+/* Animated gradient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float-orb 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(224,92,46,.18) 0%, transparent 70%); top: -10%; left: -15%; animation-delay: 0s; }
+.orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,.12) 0%, transparent 70%); bottom: -5%; right: -10%; animation-delay: -3s; }
+.orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(58,168,160,.1) 0%, transparent 70%); top: 40%; left: 60%; animation-delay: -5s; }
+@keyframes float-orb { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-20px) scale(1.05)} 66%{transform:translate(-20px,15px) scale(.95)} }
+
+/* Animated grid lines */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 80%);
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgba(224,92,46,.1); border: 1px solid rgba(224,92,46,.25);
+  color: var(--ember2); font-size: .73rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: .45rem 1.1rem; border-radius: 100px;
+  margin-bottom: 2rem; opacity: 0; animation: fade-up .8s .3s forwards;
+}
+
+.hero h1 {
+  font-family: var(--font-d);
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  font-weight: 700; line-height: 1.05; letter-spacing: -.03em;
+  color: var(--text); margin-bottom: 1.6rem;
+  opacity: 0; animation: fade-up .9s .5s forwards;
+}
+.hero h1 .line2 { display: block; font-style: italic; color: var(--ember2); }
+.hero h1 .line3 { display: block; color: var(--gold); font-weight: 300; }
+
+.hero-desc {
+  font-size: clamp(.95rem, 2vw, 1.15rem); color: var(--muted); font-weight: 300;
+  line-height: 1.8; max-width: 600px; margin: 0 auto 2.8rem;
+  opacity: 0; animation: fade-up .9s .7s forwards;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  opacity: 0; animation: fade-up .9s .9s forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: var(--ember); color: white;
+  padding: .9rem 2.2rem; border-radius: 100px;
+  font-size: .88rem; font-weight: 600; letter-spacing: .04em;
+  transition: all .25s; cursor: none;
+  box-shadow: 0 0 30px rgba(224,92,46,.35);
+}
+.btn-primary:hover { background: var(--ember2); transform: translateY(-2px); box-shadow: 0 8px 40px rgba(224,92,46,.5); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: .6rem;
+  border: 1px solid var(--border2); color: var(--text);
+  padding: .9rem 2.2rem; border-radius: 100px;
+  font-size: .88rem; font-weight: 500; letter-spacing: .04em;
+  transition: all .25s; cursor: none;
+}
+.btn-ghost:hover { background: var(--lift); border-color: rgba(255,255,255,.2); }
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .8rem;
+  opacity: 0; animation: fade-up .9s 1.3s forwards;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--ember), transparent);
+  animation: scroll-anim 2s ease-in-out infinite;
+}
+@keyframes scroll-anim { 0%,100%{transform:scaleY(1);opacity:.5} 50%{transform:scaleY(.6);opacity:1} }
+.scroll-text { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+/* Stats row */
+.hero-stats {
+  display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+  padding: 2.5rem 0 4rem;
+  border-top: 1px solid var(--border);
+  opacity: 0; animation: fade-up .9s 1.1s forwards;
+  position: relative; z-index: 2;
+  width: 100%; max-width: 700px;
+  margin-top: 3rem;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: var(--font-d); font-size: 2.2rem; font-weight: 700;
+  color: var(--text); line-height: 1; display: block;
+}
+.stat-label { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; display: block; }
+
+@keyframes fade-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─────────────────────────────────────────────────────────
+   FLOATING TABLE OF CONTENTS
+───────────────────────────────────────────────────────── */
+#toc {
+  position: fixed; right: 2rem; top: 50%; z-index: 500;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 1rem;
+  opacity: 0; transition: opacity .4s;
+}
+#toc.show { opacity: 1; }
+.toc-item {
+  display: flex; align-items: center; gap: .7rem;
+  cursor: none; text-decoration: none;
+}
+.toc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 1px solid var(--muted); background: transparent;
+  transition: all .25s; flex-shrink: 0;
+}
+.toc-label {
+  font-size: .68rem; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+  opacity: 0; transform: translateX(8px);
+  transition: opacity .2s, transform .2s; white-space: nowrap;
+  pointer-events: none;
+}
+.toc-item:hover .toc-dot { background: var(--ember); border-color: var(--ember); transform: scale(1.4); }
+.toc-item:hover .toc-label { opacity: 1; transform: translateX(0); }
+.toc-item.active .toc-dot { background: var(--ember); border-color: var(--ember); width: 8px; height: 8px; }
+.toc-item.active .toc-label { opacity: 1; transform: translateX(0); color: var(--ember); }
+
+/* ─────────────────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal.up { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal-left.up { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(40px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal-right.up { opacity: 1; transform: translateX(0); }
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* ─────────────────────────────────────────────────────────
+   SHARED SECTION STYLES
+───────────────────────────────────────────────────────── */
+section { padding: 110px 6%; position: relative; }
+.container { max-width: 900px; margin: 0 auto; }
+.container-wide { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-size: .68rem; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ember);
+  margin-bottom: 1.2rem;
+}
+.section-label .num {
+  font-family: var(--font-d); font-size: 1rem; font-style: italic;
+  color: var(--muted); font-weight: 400;
+}
+
+h2.st {
+  font-family: var(--font-d);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 700; line-height: 1.12; letter-spacing: -.03em;
+  color: var(--text); margin-bottom: 1.6rem;
+}
+h2.st em { font-style: italic; color: var(--ember2); }
+
+.rule { width: 40px; height: 2px; background: var(--ember); margin-bottom: 2.4rem; border-radius: 2px; }
+
+/* ─────────────────────────────────────────────────────────
+   PRESENTACIÓN
+───────────────────────────────────────────────────────── */
+#presentacion { background: var(--deep); }
+#presentacion::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ember), transparent);
+}
+
+.pres-grid {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 6rem; align-items: center;
+}
+
+.author-badge {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 2.8rem;
+  overflow: hidden;
+}
+.author-badge::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember), var(--gold));
+}
+.author-badge .glyph {
+  font-family: var(--font-d); font-size: 7rem; font-weight: 700;
+  color: rgba(255,255,255,.04); position: absolute;
+  top: -.5rem; right: 1rem; line-height: 1; pointer-events: none;
+  font-style: italic;
+}
+.avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ember), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 1.4rem;
+  box-shadow: 0 0 0 8px rgba(224,92,46,.1);
+}
+.author-badge h3 { font-family: var(--font-d); font-size: 1.5rem; font-weight: 600; margin-bottom: .3rem; }
+.author-badge .role { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ember); margin-bottom: 1.2rem; display: block; }
+.author-badge p { font-size: .88rem; color: var(--muted); line-height: 1.7; margin: 0 0 1.4rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  font-size: .7rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px;
+  border: 1px solid var(--border2); color: var(--muted);
+  transition: all .2s;
+}
+.chip:hover { border-color: var(--ember); color: var(--ember); }
+
+/* ─────────────────────────────────────────────────────────
+   INTRODUCTION — with big drop cap
+───────────────────────────────────────────────────────── */
+#introduccion { background: var(--void); }
+
+.intro-body p:first-child::first-letter {
+  font-family: var(--font-d); font-size: 5.5rem; font-weight: 700;
+  float: left; line-height: .85; margin: .1rem .15rem -.1rem 0;
+  color: var(--ember); font-style: italic;
+}
+
+.intro-body p { font-size: 1.05rem; line-height: 1.85; color: var(--dim); margin-bottom: 1.5rem; }
+
+.pull-quote {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-style: italic; font-weight: 400;
+  color: var(--text); line-height: 1.45;
+  border-left: 3px solid var(--ember);
+  padding: 1.5rem 2rem;
+  margin: 3rem 0;
+  background: var(--surface);
+  border-radius: 0 var(--r) var(--r) 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  font-family: var(--font-d); font-size: 6rem; font-weight: 700;
+  color: rgba(224,92,46,.15); position: absolute;
+  top: -1.5rem; left: 1rem; line-height: 1;
+}
+
+/* ─────────────────────────────────────────────────────────
+   CONCEPT — dark dramatic
+───────────────────────────────────────────────────────── */
+#concepto {
+  background: linear-gradient(180deg, var(--void) 0%, var(--deep) 100%);
+  overflow: hidden;
+}
+
+.concept-intro {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-bottom: 5rem;
+}
+
+.concept-body p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; }
+
+.concept-visual {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.concept-diagram {
+  width: 280px; height: 280px; position: relative;
+}
+.diagram-ring {
+  position: absolute; border-radius: 50%; border: 1px solid;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  animation: ring-spin linear infinite;
+}
+.ring-1 { width: 100%; height: 100%; border-color: rgba(224,92,46,.3); animation-duration: 20s; }
+.ring-2 { width: 75%; height: 75%; border-color: rgba(201,168,76,.25); animation-duration: 15s; animation-direction: reverse; }
+.ring-3 { width: 50%; height: 50%; border-color: rgba(58,168,160,.2); animation-duration: 10s; }
+@keyframes ring-spin { to{ transform: translate(-50%,-50%) rotate(360deg); } }
+
+.diagram-nodes { position: absolute; inset: 0; }
+.dnode {
+  position: absolute; width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700; font-family: var(--font-d);
+  border: 1px solid; transform: translate(-50%,-50%);
+  transition: transform .3s; cursor: none;
+}
+.dnode:hover { transform: translate(-50%,-50%) scale(1.2); }
+.dnode-center { background: var(--ember); border-color: var(--ember2); color: white; width: 60px; height: 60px; font-size: .6rem; letter-spacing: .06em; text-align: center; top: 50%; left: 50%; }
+.dnode-1 { background: var(--surface); border-color: var(--border2); color: var(--gold); top: 8%; left: 50%; }
+.dnode-2 { background: var(--surface); border-color: var(--border2); color: var(--teal); top: 35%; left: 95%; }
+.dnode-3 { background: var(--surface); border-color: var(--border2); color: var(--ember); top: 80%; left: 75%; }
+.dnode-4 { background: var(--surface); border-color: var(--border2); color: var(--rose); top: 80%; left: 25%; }
+.dnode-5 { background: var(--surface); border-color: var(--border2); color: var(--gold); top: 35%; left: 5%; }
+
+.concept-cards-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+}
+
+.ccard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2rem;
+  transition: all .3s cubic-bezier(.16,1,.3,1);
+  position: relative; overflow: hidden; cursor: none;
+  group: true;
+}
+.ccard::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(224,92,46,.08) 0%, transparent 60%);
+  opacity: 0; transition: opacity .3s;
+}
+.ccard:hover::before { opacity: 1; }
+.ccard:hover { border-color: rgba(224,92,46,.3); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+
+.ccard-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: rgba(224,92,46,.12); border: 1px solid rgba(224,92,46,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: var(--ember); margin-bottom: 1.2rem;
+  transition: background .3s, border-color .3s;
+}
+.ccard:hover .ccard-icon { background: var(--ember); border-color: var(--ember); color: white; }
+.ccard h4 { font-family: var(--font-d); font-size: 1.1rem; font-weight: 600; margin-bottom: .6rem; }
+.ccard p { font-size: .87rem; color: var(--muted); line-height: 1.7; margin: 0; }
+
+/* ─────────────────────────────────────────────────────────
+   FEATURES — bento grid layout
+───────────────────────────────────────────────────────── */
+#caracteristicas { background: var(--deep); }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto auto;
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+.bento-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2rem;
+  transition: all .3s; cursor: none; overflow: hidden; position: relative;
+}
+.bento-item:hover { border-color: var(--border2); background: var(--lift); transform: scale(1.01); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+.bento-item.col2 { grid-column: span 2; }
+.bento-item.col3 { grid-column: span 3; }
+.bento-item.col4 { grid-column: span 4; }
+.bento-item.col6 { grid-column: span 6; }
+
+.bento-item .big-icon {
+  font-size: 3.5rem; color: rgba(255,255,255,.06);
+  position: absolute; bottom: .5rem; right: 1rem;
+  line-height: 1; pointer-events: none;
+}
+.bento-num {
+  font-family: var(--font-d); font-size: .75rem; font-style: italic;
+  color: var(--ember); margin-bottom: .8rem; display: block;
+}
+.bento-item h4 { font-family: var(--font-d); font-size: 1.2rem; font-weight: 600; margin-bottom: .6rem; }
+.bento-item p { font-size: .87rem; color: var(--muted); line-height: 1.7; margin: 0; position: relative; z-index: 1; }
+.bento-item.accent { background: var(--ember); border-color: var(--ember2); }
+.bento-item.accent h4 { color: white; }
+.bento-item.accent p { color: rgba(255,255,255,.75); }
+.bento-item.accent .bento-num { color: rgba(255,255,255,.6); }
+.bento-item.gold-b { background: rgba(201,168,76,.08); border-color: rgba(201,168,76,.2); }
+.bento-item.gold-b h4 { color: var(--gold2); }
+
+/* ─────────────────────────────────────────────────────────
+   RECURSOS — magazine grid
+───────────────────────────────────────────────────────── */
+#recursos { background: var(--void); }
+
+.magazine {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+.mag-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: all .35s cubic-bezier(.16,1,.3,1);
+  cursor: none; position: relative;
+}
+.mag-item:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 30px 80px rgba(0,0,0,.6); border-color: var(--border2); }
+.mag-item.c4 { grid-column: span 4; }
+.mag-item.c6 { grid-column: span 6; }
+.mag-item.c8 { grid-column: span 8; }
+.mag-item.c12 { grid-column: span 12; }
+
+.mag-thumb {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.mag-item.c4 .mag-thumb { height: 160px; }
+.mag-item.c6 .mag-thumb { height: 200px; }
+.mag-item.c8 .mag-thumb { height: 220px; }
+.mag-item.c12 .mag-thumb { height: 120px; }
+
+.mag-thumb-bg {
+  position: absolute; inset: 0;
+  transition: transform .5s ease;
+}
+.mag-item:hover .mag-thumb-bg { transform: scale(1.05); }
+
+.th-1 { background: linear-gradient(135deg, #0f0d10 0%, #1e0a05 50%, #3d1500 100%); }
+.th-2 { background: linear-gradient(135deg, #060b0b 0%, #0a2020 50%, #0d3535 100%); }
+.th-3 { background: linear-gradient(135deg, #0f0b00 0%, #2a1f00 50%, #4a3800 100%); }
+.th-4 { background: linear-gradient(135deg, #0a060d 0%, #1a0d26 50%, #2d1a40 100%); }
+.th-5 { background: linear-gradient(135deg, #090d0c 0%, #0d2820 50%, #1a3d30 100%); }
+.th-6 { background: linear-gradient(135deg, #0d0607 0%, #2a0a10 50%, #3d1018 100%); }
+
+.mag-thumb i { font-size: 2.8rem; position: relative; z-index: 1; }
+.th-1 i { color: var(--ember); } .th-2 i { color: var(--teal); }
+.th-3 i { color: var(--gold); } .th-4 i { color: var(--rose); }
+.th-5 i { color: var(--teal); } .th-6 i { color: var(--ember2); }
+
+.mag-item.c12 .mag-thumb i { font-size: 1.8rem; }
+
+.mag-label {
+  position: absolute; top: .8rem; left: .8rem;
+  font-size: .62rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; padding: .25rem .6rem;
+  border-radius: 100px; border: 1px solid;
+}
+.th-1 .mag-label { color: var(--ember); border-color: rgba(224,92,46,.4); background: rgba(224,92,46,.1); }
+.th-2 .mag-label { color: var(--teal); border-color: rgba(58,168,160,.4); background: rgba(58,168,160,.1); }
+.th-3 .mag-label { color: var(--gold); border-color: rgba(201,168,76,.4); background: rgba(201,168,76,.1); }
+.th-4 .mag-label { color: var(--rose); border-color: rgba(196,90,122,.4); background: rgba(196,90,122,.1); }
+.th-5 .mag-label { color: var(--teal); border-color: rgba(58,168,160,.4); background: rgba(58,168,160,.1); }
+.th-6 .mag-label { color: var(--ember); border-color: rgba(224,92,46,.4); background: rgba(224,92,46,.1); }
+
+.mag-body { padding: 1.4rem 1.6rem 1.8rem; }
+.mag-item h4 { font-family: var(--font-d); font-size: 1.05rem; font-weight: 600; margin-bottom: .5rem; line-height: 1.3; }
+.mag-item p { font-size: .83rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ─────────────────────────────────────────────────────────
+   TABLA COMPARATIVA — interactive
+───────────────────────────────────────────────────────── */
+#diferencias { background: var(--deep); }
+
+.table-wrap {
+  border-radius: var(--r); overflow: hidden;
+  border: 1px solid var(--border); box-shadow: 0 0 0 1px var(--border);
+  margin-top: 3rem;
+}
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--surface); }
+thead th {
+  padding: 1.1rem 1.6rem;
+  font-family: var(--font-d); font-size: 1rem; font-weight: 600;
+  color: var(--text); text-align: left; border-bottom: 1px solid var(--border);
+}
+thead th:first-child { color: var(--gold); width: 24%; }
+thead th:nth-child(2) { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+thead th:nth-child(3) { color: var(--ember); }
+
+thead th .th-icon { margin-right: .5rem; vertical-align: middle; }
+
+tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  transition: background .2s;
+  cursor: none;
+}
+tbody tr:hover { background: rgba(255,255,255,.03); }
+tbody tr:last-child { border: none; }
+td { padding: .9rem 1.6rem; font-size: .88rem; color: var(--muted); line-height: 1.65; vertical-align: top; }
+td:first-child { color: var(--text); font-weight: 500; font-family: var(--font-d); font-size: .95rem; }
+td:nth-child(2) { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+
+.vs-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .65rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: .2rem .55rem; border-radius: 100px; border: 1px solid;
+  margin-left: .5rem; vertical-align: middle;
+}
+.vs-trad { color: var(--gold); border-color: rgba(201,168,76,.3); background: rgba(201,168,76,.08); }
+.vs-digi { color: var(--ember); border-color: rgba(224,92,46,.3); background: rgba(224,92,46,.08); }
+
+/* ─────────────────────────────────────────────────────────
+   REFLEXIÓN — accordion style
+───────────────────────────────────────────────────────── */
+#reflexion { background: var(--void); }
+
+.accordion-item {
+  border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden; margin-bottom: 1rem;
+  transition: border-color .3s;
+}
+.accordion-item.open { border-color: rgba(224,92,46,.3); }
+
+.accordion-btn {
+  width: 100%; background: var(--surface); border: none;
+  padding: 1.8rem 2rem; display: flex; align-items: center; justify-content: space-between;
+  cursor: none; gap: 1rem; text-align: left; transition: background .2s;
+}
+.accordion-btn:hover { background: var(--lift); }
+.accordion-item.open .accordion-btn { background: rgba(224,92,46,.07); }
+
+.acc-q {
+  font-family: var(--font-d); font-size: 1.15rem; font-weight: 600;
+  font-style: italic; color: var(--text); line-height: 1.4;
+}
+.acc-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--ember); flex-shrink: 0;
+  transition: transform .35s, background .2s, border-color .2s;
+}
+.accordion-item.open .acc-icon { transform: rotate(45deg); background: var(--ember); border-color: var(--ember); color: white; }
+
+.accordion-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .5s cubic-bezier(.16,1,.3,1);
+}
+.accordion-item.open .accordion-body { max-height: 600px; }
+.acc-content {
+  padding: 0 2rem 2rem;
+  font-size: .97rem; color: var(--muted); line-height: 1.85;
+}
+.acc-content p { margin-bottom: 1rem; }
+.acc-content p:last-child { margin: 0; }
+.acc-content em { color: var(--text); font-style: italic; }
+.acc-content strong { color: var(--ember); font-weight: 600; }
+
+/* ─────────────────────────────────────────────────────────
+   CONCLUSIÓN
+───────────────────────────────────────────────────────── */
+#conclusion { background: var(--deep); }
+
+.conclusion-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 3.5rem 4rem;
+  position: relative; overflow: hidden;
+}
+.conclusion-wrap::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--ember), var(--gold), var(--teal));
+}
+.conclusion-wrap::after {
+  content: '"';
+  font-family: var(--font-d); font-size: 16rem; font-weight: 700;
+  color: rgba(255,255,255,.025); position: absolute;
+  top: -3rem; right: 2rem; line-height: 1; pointer-events: none;
+}
+.conclusion-wrap p { font-size: 1rem; color: var(--muted); line-height: 1.9; margin-bottom: 1.4rem; position: relative; z-index: 1; }
+.conclusion-wrap p:last-child { margin: 0; }
+.conclusion-wrap p strong { color: var(--ember); font-weight: 600; }
+
+/* ─────────────────────────────────────────────────────────
+   KEYWORDS — interactive cloud
+───────────────────────────────────────────────────────── */
+#palabras-clave { background: var(--void); padding: 80px 6%; }
+
+.kw-cloud {
+  display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.4rem;
+}
+.kw {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .55rem 1.2rem; border-radius: 100px;
+  font-size: .82rem; font-weight: 500;
+  border: 1px solid var(--border); color: var(--muted);
+  background: var(--surface);
+  transition: all .25s cubic-bezier(.16,1,.3,1); cursor: none;
+}
+.kw:hover { border-color: var(--ember); color: var(--ember); background: rgba(224,92,46,.08); transform: translateY(-3px) scale(1.05); }
+.kw i { font-size: .9rem; transition: color .2s; }
+.kw:hover i { color: var(--ember); }
+
+/* ─────────────────────────────────────────────────────────
+   REFERENCIAS
+───────────────────────────────────────────────────────── */
+#referencias { background: var(--deep); padding: 80px 6%; }
+
+.refs { display: flex; flex-direction: column; gap: 1rem; margin-top: 2.4rem; }
+.ref-item {
+  display: flex; align-items: flex-start; gap: 1.2rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  transition: all .25s; cursor: none;
+}
+.ref-item:hover { border-color: rgba(224,92,46,.25); background: rgba(224,92,46,.04); transform: translateX(4px); }
+.ref-n {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(224,92,46,.12); border: 1px solid rgba(224,92,46,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-style: italic; font-size: .9rem; color: var(--ember);
+}
+.ref-item p { font-size: .87rem; color: var(--muted); line-height: 1.65; margin: 0; }
+.ref-item strong { color: var(--text); font-weight: 600; }
+
+/* ─────────────────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────────────────── */
+footer {
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  padding: 4rem 6% 2.5rem;
+}
+.footer-grid {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.8fr 1fr 1fr; gap: 4rem;
+  padding-bottom: 3.5rem; border-bottom: 1px solid var(--border);
+}
+.footer-brand h3 {
+  font-family: var(--font-d); font-size: 1.3rem; font-weight: 600;
+  color: var(--text); margin-bottom: .6rem;
+}
+.footer-brand p { font-size: .85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+
+.footer-socials { display: flex; gap: .7rem; }
+.fs-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--muted); transition: all .2s; cursor: none;
+}
+.fs-btn:hover { border-color: var(--ember); color: var(--ember); background: rgba(224,92,46,.1); }
+
+.footer-col h4 {
+  font-size: .7rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 1.2rem;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+.footer-col a { font-size: .86rem; color: var(--muted); transition: color .2s; cursor: none; }
+.footer-col a:hover { color: var(--ember2); }
+
+.footer-bottom {
+  max-width: 1000px; margin: 2.5rem auto 0;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .75rem; color: rgba(255,255,255,.2);
+  flex-wrap: wrap; gap: .5rem;
+}
+.footer-bottom a { color: var(--gold); transition: color .2s; cursor: none; }
+.footer-bottom a:hover { color: var(--gold2); }
+.footer-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  color: var(--ember); font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────
+   PARTICLE CANVAS
+───────────────────────────────────────────────────────── */
+#particle-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; opacity: .4;
+}
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  #toc { display: none; }
+  .concept-intro { grid-template-columns: 1fr; }
+  .concept-visual { display: none; }
+  .magazine .mag-item.c8 { grid-column: span 12; }
+  .magazine .mag-item.c6 { grid-column: span 6; }
+}
+@media (max-width: 800px) {
+  section { padding: 80px 4%; }
+  nav { padding: 0 4%; }
+  .nav-links, .nav-cta { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column; position: fixed;
+    top: var(--nav-h); left: 0; right: 0; padding: 1.5rem 5%;
+    background: rgba(8,7,9,.97); border-bottom: 1px solid var(--border);
+    gap: 1rem; backdrop-filter: blur(20px);
+  }
+  .burger { display: flex; }
+  .pres-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .concept-cards-grid { grid-template-columns: 1fr 1fr; }
+  .bento-item.col2 { grid-column: span 3; }
+  .bento-item.col3 { grid-column: span 6; }
+  .bento-item.col4 { grid-column: span 6; }
+  .magazine .mag-item { grid-column: span 12 !important; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .conclusion-wrap { padding: 2rem; }
+}
+@media (max-width: 540px) {
+  .concept-cards-grid { grid-template-columns: 1fr; }
+  .bento-item.col2 { grid-column: span 6; }
+  .hero-stats { gap: 2rem; }
+  #cursor, #cursor-ring { display: none; }
+  body { cursor: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Particle canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="dot"></div>
+    La Evolución del Discurso
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#presentacion">Presentación</a></li>
+    <li><a href="#introduccion">Intro</a></li>
+    <li><a href="#concepto">Concepto</a></li>
+    <li><a href="#caracteristicas">Características</a></li>
+    <li><a href="#diferencias">Comparativa</a></li>
+    <li><a href="#reflexion">Reflexión</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ul>
+  <a href="#introduccion" class="nav-cta">
+    <i class="ph ph-book-open-text"></i> Leer
+  </a>
+  <div class="burger" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Floating TOC -->
+<nav id="toc">
+  <a href="#presentacion" class="toc-item" data-section="presentacion"><div class="toc-dot"></div><span class="toc-label">Presentación</span></a>
+  <a href="#introduccion" class="toc-item" data-section="introduccion"><div class="toc-dot"></div><span class="toc-label">Introducción</span></a>
+  <a href="#concepto" class="toc-item" data-section="concepto"><div class="toc-dot"></div><span class="toc-label">Concepto</span></a>
+  <a href="#caracteristicas" class="toc-item" data-section="caracteristicas"><div class="toc-dot"></div><span class="toc-label">Características</span></a>
+  <a href="#recursos" class="toc-item" data-section="recursos"><div class="toc-dot"></div><span class="toc-label">Recursos</span></a>
+  <a href="#diferencias" class="toc-item" data-section="diferencias"><div class="toc-dot"></div><span class="toc-label">Comparativa</span></a>
+  <a href="#reflexion" class="toc-item" data-section="reflexion"><div class="toc-dot"></div><span class="toc-label">Reflexión</span></a>
+  <a href="#conclusion" class="toc-item" data-section="conclusion"><div class="toc-dot"></div><span class="toc-label">Conclusión</span></a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<header class="hero" id="inicio">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <i class="ph ph-sparkle"></i>
+      Blog Académico · Narrativa & Discurso Digital
+    </div>
+    <h1>
+      La evolución<br/>
+      <span class="line2">del discurso:</span>
+      <span class="line3">de la narrativa tradicional al mundo digital</span>
+    </h1>
+    <p class="hero-desc">
+      Una exploración académica de cómo las formas de narrar han transformado
+      la comunicación, el conocimiento y la experiencia humana a través del tiempo.
+    </p>
+    <div class="hero-actions">
+      <a href="#introduccion" class="btn-primary">
+        <i class="ph ph-book-open"></i> Comenzar lectura
+      </a>
+      <a href="#diferencias" class="btn-ghost">
+        <i class="ph ph-arrows-left-right"></i> Ver comparativa
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num" data-count="8">0</span>
+        <span class="stat-label">Secciones</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="10">0</span>
+        <span class="stat-label">Dimensiones analizadas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="6">0</span>
+        <span class="stat-label">Recursos multimedia</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="8">0</span>
+        <span class="stat-label">Referencias</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Desplazar para explorar</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRESENTACIÓN
+═══════════════════════════════════════════════════════ -->
+<section id="presentacion">
+  <div class="container">
+    <div class="pres-grid">
+      <div>
+        <p class="section-label reveal"><span class="num">01 —</span> Presentación</p>
+        <h2 class="st reveal d1">Acerca de<br/><em>este trabajo</em></h2>
+        <div class="rule reveal d2"></div>
+        <p class="reveal d2" style="font-size:1rem; color:var(--muted); line-height:1.85; margin-bottom:1.2rem;">
+          Este blog académico explora la transformación de los relatos humanos a lo largo de la historia, desde los textos lineales impresos hasta las experiencias narrativas interactivas y multimodales que caracterizan la era digital.
+        </p>
+        <p class="reveal d3" style="font-size:1rem; color:var(--muted); line-height:1.85;">
+          A través de un análisis conceptual y comparativo, se busca comprender las implicaciones cognitivas, culturales y comunicativas de este cambio paradigmático en la forma en que construimos y compartimos historias.
+        </p>
+      </div>
+      <div class="reveal-right d2">
+        <div class="author-badge">
+          <span class="glyph">N</span>
+          <div class="avatar"><i class="ph ph-graduation-cap"></i></div>
+          <h3>Valeria Rueda</h3>
+          <span class="role">Universidad Minuto de Dios (UNIMINUTO) </span>
+          <p> Asignatura: Lectura y Escritura en el Contexto Digital <br>
+Docente:LINA LINDSAY TENORIO RAMIREZ<br>
+Fecha: 22 De Febrero Del 2026</p><br>
+          <div class="chips">
+            <span class="chip">Narrativa digital</span>
+            <span class="chip">Comunicación</span>
+            <span class="chip">Lingüística</span>
+            <span class="chip">Semiótica</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     INTRODUCCIÓN
+═══════════════════════════════════════════════════════ -->
+<section id="introduccion">
+  <div class="container">
+    <p class="section-label reveal"><span class="num">02 —</span> Introducción</p>
+    <h2 class="st reveal d1">El relato como<br/><em>eje de la humanidad</em></h2>
+    <div class="rule reveal d2"></div>
+
+    <div class="intro-body reveal d2">
+      <p>
+        Narrar es un acto tan antiguo como el lenguaje mismo. Desde los petroglifos trazados en piedra hasta los feeds algorítmicos de las redes sociales, cada civilización ha tejido su identidad a través de historias compartidas. El relato no es un ornamento de la cultura: es su tejido más profundo, el modo en que los seres humanos ordenamos el caos de la experiencia y le otorgamos sentido.
+      </p>
+    </div>
+
+    <blockquote class="pull-quote reveal d3">
+      "Narrar es un acto tan antiguo como el lenguaje mismo: cada civilización ha tejido su identidad a través de historias, y cada revolución tecnológica ha reconfigurado los modos en que esas historias se construyen y se transmiten."
+    </blockquote>
+
+    <div class="intro-body reveal d2">
+      <p>
+        Desde los relatos orales transmitidos alrededor del fuego hasta los hipertextos navegables de la web contemporánea, la narrativa ha sido el vehículo fundamental para transmitir valores y construir comunidades. No obstante, el modo en que narramos no ha permanecido estático: cada revolución tecnológica —la escritura, la imprenta, la fotografía, el cine— ha reconfigurado profundamente las convenciones del relato.
+      </p>
+      <p>
+        En el momento actual, la irrupción de internet, los dispositivos móviles, las redes sociales y la inteligencia artificial marca una nueva inflexión: el surgimiento de la narrativa digital. Esta modalidad no es simplemente la "versión electrónica" del texto impreso; implica una reconfiguración radical de las categorías de autor, lector, tiempo, espacio y sentido. El propósito de este blog es explorar esa transformación con rigor académico y mirada crítica.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CONCEPTO
+═══════════════════════════════════════════════════════ -->
+<section id="concepto">
+  <div class="container-wide">
+    <div class="concept-intro">
+      <div>
+        <p class="section-label reveal"><span class="num">03 —</span> Concepto central</p>
+        <h2 class="st reveal d1">¿Qué es la<br/><em>narrativa digital?</em></h2>
+        <div class="rule reveal d2"></div>
+        <div class="concept-body reveal d2">
+          <p>La narrativa digital es una forma de contar historias que aprovecha las capacidades del entorno digital: hipertextualidad, interactividad, multimodalidad y conectividad. Se diferencia de la narrativa tradicional no sólo en el soporte, sino en la lógica misma de la construcción del sentido.</p>
+          <p>Según Bolter (2001), el espacio de escritura digital es fundamentalmente diferente al impreso: no es simplemente un nuevo recipiente para viejos contenidos, sino una nueva forma de organizar y experimentar el conocimiento humano que transforma la relación entre texto, lector y mundo.</p>
+        </div>
+      </div>
+      <div class="concept-visual reveal-right d2">
+        <div class="concept-diagram">
+          <div class="diagram-ring ring-1"></div>
+          <div class="diagram-ring ring-2"></div>
+          <div class="diagram-ring ring-3"></div>
+          <div class="diagram-nodes">
+            <div class="dnode dnode-center">Narrativa<br/>Digital</div>
+            <div class="dnode dnode-1"><i class="ph ph-link"></i></div>
+            <div class="dnode dnode-2"><i class="ph ph-cursor-click"></i></div>
+            <div class="dnode dnode-3"><i class="ph ph-images-square"></i></div>
+            <div class="dnode dnode-4"><i class="ph ph-users-three"></i></div>
+            <div class="dnode dnode-5"><i class="ph ph-planet"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-cards-grid">
+      <div class="ccard reveal d1">
+        <div class="ccard-icon"><i class="ph ph-link-simple"></i></div>
+        <h4>Hipertextualidad</h4>
+        <p>El texto se fragmenta en nodos interconectados. El lector construye su propio recorrido a través de enlaces, creando una lectura única e irrepetible que desafía la secuencialidad tradicional.</p>
+      </div>
+      <div class="ccard reveal d2">
+        <div class="ccard-icon"><i class="ph ph-cursor-click"></i></div>
+        <h4>Interactividad</h4>
+        <p>La frontera entre autor y lector se diluye. El usuario puede intervenir en el relato, tomar decisiones y modificar el desarrollo de la historia en tiempo real, convirtiéndose en coautor.</p>
+      </div>
+      <div class="ccard reveal d3">
+        <div class="ccard-icon"><i class="ph ph-images-square"></i></div>
+        <h4>Multimodalidad</h4>
+        <p>Texto, imagen, sonido, video, animación y código coexisten en un mismo espacio narrativo, enriqueciendo la experiencia y ampliando el horizonte del significado posible.</p>
+      </div>
+      <div class="ccard reveal d1">
+        <div class="ccard-icon"><i class="ph ph-clock-countdown"></i></div>
+        <h4>Temporalidad mutable</h4>
+        <p>A diferencia del libro, la narrativa digital puede actualizarse, editarse y transformarse después de su publicación, incorporando nuevos datos y perspectivas en tiempo real.</p>
+      </div>
+      <div class="ccard reveal d2">
+        <div class="ccard-icon"><i class="ph ph-users-three"></i></div>
+        <h4>Coautoría</h4>
+        <p>Plataformas colaborativas permiten que múltiples voces construyan juntas un relato, desbordando el modelo del autor único y omnisciente heredado de la tradición impresa.</p>
+      </div>
+      <div class="ccard reveal d3">
+        <div class="ccard-icon"><i class="ph ph-planet"></i></div>
+        <h4>Alcance global</h4>
+        <p>La red elimina las barreras geográficas: una historia puede llegar instantáneamente a lectores en cualquier rincón del planeta, simultáneamente y en múltiples idiomas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CARACTERÍSTICAS — BENTO GRID
+═══════════════════════════════════════════════════════ -->
+<section id="caracteristicas">
+  <div class="container-wide">
+    <p class="section-label reveal"><span class="num">04 —</span> Características</p>
+    <h2 class="st reveal d1">Rasgos definitorios de<br/><em>la narrativa digital</em></h2>
+    <div class="rule reveal d2"></div>
+
+    <div class="bento">
+      <div class="bento-item col3 reveal d1">
+        <span class="bento-num">01</span>
+        <h4>Narrativa no lineal</h4>
+        <p>El relato digital rompe con la secuencialidad del inicio-nudo-desenlace. El lector puede entrar por múltiples puertas y construir una trayectoria personal a través del contenido narrativo.</p>
+        <i class="ph ph-branching big-icon"></i>
+      </div>
+      <div class="bento-item col3 accent reveal d2">
+        <span class="bento-num">02</span>
+        <h4>Inmersión y experiencia</h4>
+        <p>La combinación de estímulos sensoriales genera niveles de inmersión inéditos, comprometiendo al lector de forma holística y transformando el acto de "leer" en una experiencia encarnada.</p>
+        <i class="ph ph-brain big-icon"></i>
+      </div>
+      <div class="bento-item col6 reveal d3">
+        <span class="bento-num">03</span>
+        <h4>Expansibilidad transmedia</h4>
+        <p>Un relato digital puede expandirse coherentemente a través de múltiples plataformas —novela, serie, videojuego, red social— formando un universo narrativo integrado que demanda la participación activa del lector-fan. Este fenómeno, descrito por Jenkins (2006) como "convergencia cultural", define la lógica narrativa dominante del siglo XXI.</p>
+        <i class="ph ph-arrows-out big-icon"></i>
+      </div>
+      <div class="bento-item col4 gold-b reveal d1">
+        <span class="bento-num">04</span>
+        <h4>Datificación del lector</h4>
+        <p>Las plataformas digitales registran los patrones de lectura, las interacciones y las preferencias de los usuarios, generando datos que pueden retroalimentar el propio relato y personalizar la experiencia narrativa.</p>
+        <i class="ph ph-chart-bar big-icon"></i>
+      </div>
+      <div class="bento-item col2 reveal d2">
+        <span class="bento-num">05</span>
+        <h4>Dialogismo ampliado</h4>
+        <p>Los comentarios, reacciones y compartidos convierten cada texto en un espacio de conversación abierta.</p>
+        <i class="ph ph-chat-circle-dots big-icon"></i>
+      </div>
+      <div class="bento-item col6 reveal d3">
+        <span class="bento-num">06</span>
+        <h4>Personalización algorítmica</h4>
+        <p>Los algoritmos de recomendación construyen experiencias narrativas a medida, creando cámaras de eco que moldean qué historias llegan a quién y cuándo. Esta dimensión plantea preguntas éticas inéditas sobre la autonomía lectora y el pluralismo informativo en las democracias contemporáneas.</p>
+        <i class="ph ph-magic-wand big-icon"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     RECURSOS MULTIMEDIA
+═══════════════════════════════════════════════════════ -->
+<section id="recursos">
+  <div class="container-wide">
+    <p class="section-label reveal"><span class="num">05 —</span> Recursos multimedia</p>
+    <h2 class="st reveal d1">Ejemplos y formatos<br/><em>de la narrativa digital</em></h2>
+    <div class="rule reveal d2"></div>
+
+    <div class="magazine">
+      <div class="mag-item c4 reveal d1">
+        <div class="mag-thumb th-1">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">Hipertexto</span>
+          <i class="ph ph-book-bookmark"></i>
+        </div>
+        <div class="mag-body">
+          <h4>Afternoon, a Story (1987)</h4>
+          <p>De Michael Joyce, primera obra de ficción hipertextual. Narrada en nodos interconectados, permite al lector explorar distintas versiones de una misma historia según sus elecciones personales.</p>
+        </div>
+      </div>
+      <div class="mag-item c4 reveal d2">
+        <div class="mag-thumb th-2">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">Videojuego narrativo</span>
+          <i class="ph ph-game-controller"></i>
+        </div>
+        <div class="mag-body">
+          <h4>Gone Home (2013)</h4>
+          <p>Una experiencia de exploración donde el jugador descubre una historia íntima a través de objetos, cartas y espacios. Caso paradigmático de narración ambiental interactiva en videojuegos indie.</p>
+        </div>
+      </div>
+      <div class="mag-item c4 reveal d3">
+        <div class="mag-thumb th-3">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">Interactivo</span>
+          <i class="ph ph-video"></i>
+        </div>
+        <div class="mag-body">
+          <h4>Bandersnatch · Netflix (2018)</h4>
+          <p>Episodio de Black Mirror donde el espectador toma decisiones que definen la trama. Integra la lógica del videojuego dentro del formato audiovisual de streaming masivo.</p>
+        </div>
+      </div>
+      <div class="mag-item c6 reveal d1">
+        <div class="mag-thumb th-4">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">Podcast</span>
+          <i class="ph ph-microphone-stage"></i>
+        </div>
+        <div class="mag-body">
+          <h4>Serial (2014)</h4>
+          <p>Podcast de investigación periodística que reinventó el formato de audio con técnicas propias del thriller novelesco: suspenso episódico, revelaciones graduales y construcción de personajes memorables. Inauguró la era del podcast narrativo de largo aliento.</p>
+        </div>
+      </div>
+      <div class="mag-item c6 reveal d2">
+        <div class="mag-thumb th-5">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">Transmedia</span>
+          <i class="ph ph-share-network"></i>
+        </div>
+        <div class="mag-body">
+          <h4>Universo Marvel (MCU)</h4>
+          <p>Caso emblemático de storytelling transmedia: un relato mayor desplegado en películas, series, cómics, videojuegos y experiencias temáticas que demandan la participación activa del fan-lector para completar el sentido global del universo narrativo.</p>
+        </div>
+      </div>
+      <div class="mag-item c12 reveal d3">
+        <div class="mag-thumb th-6" style="height:100px; flex-direction:row; gap:1rem; padding: 0 2rem;">
+          <div class="mag-thumb-bg"></div>
+          <span class="mag-label">IA Generativa</span>
+          <i class="ph ph-robot"></i>
+          <div style="position:relative; z-index:1; color: rgba(232,226,217,.4); font-family: var(--font-d); font-size:1rem; font-style:italic; text-align: left; max-width: 500px;">
+            "La inteligencia artificial plantea las preguntas más radicales sobre autoría y creatividad que haya enfrentado la narrativa humana."
+          </div>
+        </div>
+        <div class="mag-body">
+          <h4>Ficción colaborativa con IA (2023–)</h4>
+          <p>Plataformas como AI Dungeon o NovelAI permiten co-crear relatos con modelos de lenguaje, planteando preguntas inéditas sobre autoría, creatividad y los límites de lo literario en la era de la inteligencia artificial generativa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     COMPARATIVA
+═══════════════════════════════════════════════════════ -->
+<section id="diferencias">
+  <div class="container-wide">
+    <p class="section-label reveal"><span class="num">06 —</span> Análisis comparativo</p>
+    <h2 class="st reveal d1">Narrativa digital<br/><em>vs. narrativa tradicional</em></h2>
+    <div class="rule reveal d2"></div>
+    <p class="reveal d2" style="color:var(--muted); font-size:.97rem; line-height:1.8; max-width:640px; margin-bottom:0;">
+      La siguiente tabla sintetiza las diferencias estructurales y comunicativas más relevantes entre ambos paradigmas narrativos, con el fin de comprender su especificidad y complementariedad.
+    </p>
+
+    <div class="table-wrap reveal d3">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimensión</th>
+            <th><i class="ph ph-book-open-text th-icon"></i> Narrativa Tradicional</th>
+            <th><i class="ph ph-monitor-play th-icon"></i> Narrativa Digital</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Soporte</td>
+            <td>Papel impreso, manuscrito, oralidad <span class="vs-badge vs-trad">Estable</span></td>
+            <td>Pantallas, dispositivos, entornos virtuales <span class="vs-badge vs-digi">Múltiple</span></td>
+          </tr>
+          <tr>
+            <td>Estructura</td>
+            <td>Lineal y cerrada; inicio, nudo, desenlace</td>
+            <td>Ramificada, rizomática y abierta; múltiples recorridos</td>
+          </tr>
+          <tr>
+            <td>Autor / Lector</td>
+            <td>Roles claramente diferenciados y estables <span class="vs-badge vs-trad">Fijo</span></td>
+            <td>Roles fluidos; el lector puede convertirse en coautor <span class="vs-badge vs-digi">Fluido</span></td>
+          </tr>
+          <tr>
+            <td>Modalidades</td>
+            <td>Predominantemente verbal o verbal-visual</td>
+            <td>Multimodal: texto, imagen, audio, video, interacción</td>
+          </tr>
+          <tr>
+            <td>Temporalidad</td>
+            <td>Fija e inmutable tras la publicación <span class="vs-badge vs-trad">Permanente</span></td>
+            <td>Actualizable y procesual en tiempo real <span class="vs-badge vs-digi">Dinámica</span></td>
+          </tr>
+          <tr>
+            <td>Interacción</td>
+            <td>Contemplativa; el lector recibe el relato</td>
+            <td>Participativa; el usuario interviene y co-construye</td>
+          </tr>
+          <tr>
+            <td>Alcance</td>
+            <td>Limitado por geografía, idioma y distribución</td>
+            <td>Potencialmente global e instantáneo <span class="vs-badge vs-digi">Global</span></td>
+          </tr>
+          <tr>
+            <td>Permanencia</td>
+            <td>Alta estabilidad del artefacto narrativo <span class="vs-badge vs-trad">Durable</span></td>
+            <td>Volatilidad; los contenidos pueden desaparecer o alterarse</td>
+          </tr>
+          <tr>
+            <td>Retroalimentación</td>
+            <td>Diferida (reseñas, cartas al autor)</td>
+            <td>Inmediata (comentarios, métricas, reacciones) <span class="vs-badge vs-digi">Real-time</span></td>
+          </tr>
+          <tr>
+            <td>Profundidad</td>
+            <td>Propicia la lectura sostenida y reflexiva <span class="vs-badge vs-trad">Analítica</span></td>
+            <td>Tendencia al consumo rápido; riesgo de superficialidad</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     REFLEXIÓN — ACCORDION
+═══════════════════════════════════════════════════════ -->
+<section id="reflexion">
+  <div class="container">
+    <p class="section-label reveal"><span class="num">07 —</span> Reflexión crítica</p>
+    <h2 class="st reveal d1">Preguntas para<br/><em>la reflexión</em></h2>
+    <div class="rule reveal d2"></div>
+
+    <div style="margin-top:2.5rem;">
+      <div class="accordion-item open reveal d2">
+        <button class="accordion-btn" aria-expanded="true">
+          <span class="acc-q">¿Qué diferencias encuentras entre una narrativa digital y una tradicional?</span>
+          <div class="acc-icon"><i class="ph ph-plus"></i></div>
+        </button>
+        <div class="accordion-body">
+          <div class="acc-content">
+            <p>La diferencia más profunda no reside en el soporte —papel vs. pantalla— sino en la <em>ontología del relato</em> mismo. La narrativa tradicional es un objeto acabado: el autor entrega una obra terminada y el lector la recorre en un orden previsto. El significado es estable, aunque cada lector lo interprete de modo diferente.</p>
+            <p>La narrativa digital, en cambio, es un <em>proceso</em>. El relato se constituye en el acto de ser navegado, jugado o interactuado. No hay un texto único sino múltiples realizaciones posibles según las decisiones del usuario. <strong>Esto desplaza la pregunta desde "¿qué cuenta esta historia?" hacia "¿qué historia produces tú al interactuar con ella?"</strong></p>
+            <p>Además, la narrativa tradicional sitúa al lector en una posición contemplativa: recibe el relato, lo interpreta y lo guarda en la memoria. La narrativa digital, en cambio, lo sitúa en una posición activa: debe tomar decisiones, elegir caminos, construir sentido a partir de fragmentos. Esta diferencia tiene implicaciones profundas en el modo en que los relatos nos forman como sujetos y como ciudadanos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item reveal d3">
+        <button class="accordion-btn" aria-expanded="false">
+          <span class="acc-q">¿Cuál de los dos formatos logra argumentar mejor y por qué?</span>
+          <div class="acc-icon"><i class="ph ph-plus"></i></div>
+        </button>
+        <div class="accordion-body">
+          <div class="acc-content">
+            <p>La pregunta implica una tensión productiva. La narrativa tradicional posee ventajas argumentativas notables: la linealidad permite construir razonamientos sostenidos, jerarquizar evidencias y guiar al lector hacia una conclusión con precisión retórica. Géneros como el ensayo o la monografía han demostrado históricamente su eficacia para la argumentación compleja.</p>
+            <p>Sin embargo, la narrativa digital puede <em>argumentar de modo diferente</em>, no necesariamente inferior. Una infografía interactiva, un documental web o un reportaje de datos puede integrar evidencia visual, testimonios en audio y estadísticas navegables de un modo que ningún texto impreso puede igualar. <strong>La clave está en la intención comunicativa</strong>: donde se requiere profundidad analítica y rigor lógico, el texto tradicional prevalece; donde se necesita convencer a través de la experiencia directa y la inmersión, la narrativa digital tiene ventaja.</p>
+            <p>En última instancia, la pregunta por el formato "mejor" para argumentar revela una tensión más profunda entre dos epistemologías: la del logos ordenado y secuencial de la razón occidental moderna, y la del sentido emergente, distribuido y participativo que caracteriza la cultura digital. No se trata de elegir una sobre otra, sino de aprender a habitar con lucidez ambas lógicas del discurso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CONCLUSIÓN
+═══════════════════════════════════════════════════════ -->
+<section id="conclusion">
+  <div class="container">
+    <p class="section-label reveal"><span class="num">08 —</span> Conclusión</p>
+    <h2 class="st reveal d1">Una evolución,<br/><em>no una ruptura</em></h2>
+    <div class="rule reveal d2"></div>
+
+    <div class="conclusion-wrap reveal d2">
+      <p>A lo largo de este recorrido hemos podido comprobar que la narrativa digital no representa la muerte de la narrativa tradicional, sino su expansión hacia territorios inexplorados. Del mismo modo que la fotografía no eliminó la pintura sino que la liberó para explorar la abstracción, <strong>la narrativa digital permite a la escritura tradicional redescubrirse como espacio de profundidad, matiz y permanencia</strong> en contraste con la velocidad y la liquidez del entorno digital.</p>
+      <p>Lo que está en juego no es simplemente un cambio de formato sino una transformación de las competencias narrativas que necesitamos como lectores, escritores y ciudadanos. Comprender la narrativa digital exige aprender a leer críticamente los hipertextos, a distinguir la argumentación rigurosa de la persuasión algorítmica, y a valorar tanto la inmersión interactiva como la concentración reflexiva que proporciona la lectura lineal.</p>
+      <p>En última instancia, la narrativa —en cualquier forma que adopte— sigue siendo el modo fundamental en que los seres humanos ordenamos el caos de la experiencia, construimos identidad colectiva y transmitimos lo que importa de una generación a otra. <strong>Entender cómo evoluciona ese acto es entender cómo nos transformamos como sociedad.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PALABRAS CLAVE
+═══════════════════════════════════════════════════════ -->
+<section id="palabras-clave">
+  <div class="container">
+    <p class="section-label reveal"><span class="num">09 —</span> Palabras clave</p>
+    <h2 class="st reveal d1">Términos <em>esenciales</em></h2>
+    <div class="rule reveal d2"></div>
+    <div class="kw-cloud reveal d2">
+      <span class="kw"><i class="ph ph-hash"></i>Narrativa digital</span>
+      <span class="kw"><i class="ph ph-hash"></i>Hipertexto</span>
+      <span class="kw"><i class="ph ph-hash"></i>Interactividad</span>
+      <span class="kw"><i class="ph ph-hash"></i>Multimodalidad</span>
+      <span class="kw"><i class="ph ph-hash"></i>Transmedia</span>
+      <span class="kw"><i class="ph ph-hash"></i>Narrativa no lineal</span>
+      <span class="kw"><i class="ph ph-hash"></i>Lectura digital</span>
+      <span class="kw"><i class="ph ph-hash"></i>Coautoría</span>
+      <span class="kw"><i class="ph ph-hash"></i>Storytelling</span>
+      <span class="kw"><i class="ph ph-hash"></i>Discurso digital</span>
+      <span class="kw"><i class="ph ph-hash"></i>Inmersión narrativa</span>
+      <span class="kw"><i class="ph ph-hash"></i>Rizoma</span>
+      <span class="kw"><i class="ph ph-hash"></i>Cybertexto</span>
+      <span class="kw"><i class="ph ph-hash"></i>Netcultura</span>
+      <span class="kw"><i class="ph ph-hash"></i>Narrativa participativa</span>
+      <span class="kw"><i class="ph ph-hash"></i>Algoritmo y relato</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     REFERENCIAS
+═══════════════════════════════════════════════════════ -->
+<section id="referencias">
+  <div class="container">
+    <p class="section-label reveal"><span class="num">10 —</span> Bibliografía</p>
+    <h2 class="st reveal d1">Referencias <em>académicas</em></h2>
+    <div class="rule reveal d2"></div>
+    <div class="refs">
+      <div class="ref-item reveal d1"><div class="ref-n">1</div><p><strong>Bolter, J. D.</strong> (2001). <em>Writing Space: Computers, Hypertext, and the Remediation of Print</em> (2.ª ed.). Lawrence Erlbaum Associates.</p></div>
+      <div class="ref-item reveal d2"><div class="ref-n">2</div><p><strong>Jenkins, H.</strong> (2006). <em>Convergence Culture: Where Old and New Media Collide</em>. New York University Press.</p></div>
+      <div class="ref-item reveal d3"><div class="ref-n">3</div><p><strong>Manovich, L.</strong> (2001). <em>The Language of New Media</em>. MIT Press.</p></div>
+      <div class="ref-item reveal d1"><div class="ref-n">4</div><p><strong>Ryan, M.-L.</strong> (2004). <em>Narrative Across Media: The Languages of Storytelling</em>. University of Nebraska Press.</p></div>
+      <div class="ref-item reveal d2"><div class="ref-n">5</div><p><strong>Landow, G. P.</strong> (2006). <em>Hypertext 3.0: Critical Theory and New Media in an Era of Globalization</em>. Johns Hopkins University Press.</p></div>
+      <div class="ref-item reveal d3"><div class="ref-n">6</div><p><strong>Scolari, C. A.</strong> (2013). <em>Narrativas transmedia: cuando todos los medios cuentan</em>. Deusto.</p></div>
+      <div class="ref-item reveal d1"><div class="ref-n">7</div><p><strong>Aarseth, E. J.</strong> (1997). <em>Cybertext: Perspectives on Ergodic Literature</em>. Johns Hopkins University Press.</p></div>
+      <div class="ref-item reveal d2"><div class="ref-n">8</div><p><strong>Murray, J. H.</strong> (1997). <em>Hamlet on the Holodeck: The Future of Narrative in Cyberspace</em>. Free Press.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>La evolución del discurso</h3>
+      <p>Blog académico dedicado al estudio de la narrativa digital y su relación con las formas tradicionales del relato humano. Una exploración rigurosa y apasionada del lenguaje.</p>
+      <div class="footer-socials">
+        <a class="fs-btn" href="#inicio" title="Inicio"><i class="ph ph-house"></i></a>
+        <a class="fs-btn" href="#concepto" title="Concepto"><i class="ph ph-book-open"></i></a>
+        <a class="fs-btn" href="#referencias" title="Referencias"><i class="ph ph-article"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Secciones</h4>
+      <ul>
+        <li><a href="#presentacion">Presentación</a></li>
+        <li><a href="#introduccion">Introducción</a></li>
+        <li><a href="#concepto">Concepto</a></li>
+        <li><a href="#caracteristicas">Características</a></li>
+        <li><a href="#recursos">Recursos</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Análisis</h4>
+      <ul>
+        <li><a href="#diferencias">Comparativa</a></li>
+        <li><a href="#reflexion">Reflexión</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#palabras-clave">Palabras clave</a></li>
+        <li><a href="#referencias">Referencias</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 · Blog de Valeria Rueda</span>
+    <span class="footer-badge"><i class="ph ph-fire"></i> Valeria Rueda</span>
+    <a href="#inicio">Volver al inicio ↑</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+/* ─── Custom cursor ─── */
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let rx = 0, ry = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px';
+  cursor.style.top  = cy + 'px';
+});
+function lerpRing() {
+  rx += (cx - rx) * .12;
+  ry += (cy - ry) * .12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(lerpRing);
+}
+lerpRing();
+
+/* ─── Progress bar ─── */
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const max = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / max * 100) + '%';
+});
+
+/* ─── Navbar stuck ─── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('stuck', window.scrollY > 80);
+});
+
+/* ─── TOC visibility & active state ─── */
+const toc = document.getElementById('toc');
+const tocItems = document.querySelectorAll('.toc-item');
+const sections = document.querySelectorAll('section[id]');
+
+const tocObs = new IntersectionObserver(([e]) => {
+  toc.classList.toggle('show', !e.isIntersecting);
+}, { threshold: 0 });
+tocObs.observe(document.querySelector('.hero'));
+
+const sectionObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocItems.forEach(i => {
+        i.classList.toggle('active', i.dataset.section === entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => sectionObs.observe(s));
+
+/* ─── Scroll reveal ─── */
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('up'); revObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => revObs.observe(el));
+
+/* ─── Animated counters ─── */
+function animateCount(el, target, duration = 1600) {
+  let start = null;
+  function step(ts) {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(ease * target);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const counterEls = document.querySelectorAll('[data-count]');
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCount(e.target, +e.target.dataset.count);
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+counterEls.forEach(el => counterObs.observe(el));
+
+/* ─── Accordion ─── */
+document.querySelectorAll('.accordion-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ─── Burger ─── */
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+/* ─── Card spotlight effect ─── */
+document.querySelectorAll('.ccard').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+
+/* ─── Particle canvas ─── */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + .3;
+    this.speedX = (Math.random() - .5) * .25;
+    this.speedY = (Math.random() - .5) * .25;
+    this.opacity = Math.random() * .5 + .1;
+    this.color = Math.random() > .7 ? '#e05c2e' : '#c9a84c';
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ─── Hero text typewriter subtitle ─── */
+// Already handled by CSS animations — no JS needed.
+</script>
+</body>
+</html>
